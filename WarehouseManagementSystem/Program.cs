@@ -15,18 +15,18 @@ var order = new Order
 var processor = new OrderProcessor
 {
     OnOrderInitialized = SendMessageToWarehouse
-    //Point the delegate to the SendMessageToWarehouse method
-    //One "issue" with public delegates is that they can be invoked from anywhere
+
 };
 
 processor.Process(order, SendConfirmaitonEmail);
 
-void SendMessageToWarehouse()
+bool SendMessageToWarehouse(Order order)//The parameters mus be defined in the method signature if needed, not in the assignement
 {
-    Console.WriteLine("Please pack the order");
+    Console.WriteLine($"Please pack the order: {order.OrderNumber}");
+    return true;
 }
 
-void SendConfirmaitonEmail()
+void SendConfirmaitonEmail(Order order)
 {
-    Console.WriteLine("Order Confirmation Email");
+    Console.WriteLine($"Order Confirmation Email: {order.OrderNumber}");
 }

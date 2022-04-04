@@ -5,20 +5,22 @@ namespace WarehouseManagementSystem.Business
     public class OrderProcessor
     {
         //delegate declaration
-        public delegate void OrderInitialized();
-        public delegate void ProcessCompleted();
+        public delegate bool OrderInitialized(Order order);
+        public delegate void ProcessCompleted(Order order);
 
-        //This property can refernce ANY void method without paramters
-        //Not just the delegate we defined above
+       
         public OrderInitialized OnOrderInitialized { get; set; }
 
         private void Initialize(Order order)
         {
             ArgumentNullException.ThrowIfNull(order);
 
-            OnOrderInitialized?.Invoke();
-            //Call the delegate through the property
-            //The delegate is a type, so it has its own properties also, even if it is null
+            if(OnOrderInitialized?.Invoke(order) == false)
+            {
+                throw new Exception($"Coudn't initialize {order.OrderNumber}");
+            }
+            
+         
         }
 
         public void Process(Order order, ProcessCompleted onCompleted = default)
@@ -27,9 +29,8 @@ namespace WarehouseManagementSystem.Business
 
             Initialize(order);
 
-            //By passing the delegate as a parameter to the method,
-            //we are able to more tightly controll access to the delegate
-            onCompleted?.Invoke();
+          
+            onCompleted?.Invoke(order);
         }
     }
 }
