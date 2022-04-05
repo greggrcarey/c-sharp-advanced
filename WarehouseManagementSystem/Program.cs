@@ -18,13 +18,14 @@ var processor = new OrderProcessor
     OnOrderInitialized = (order) => order.IsReadyForShipment
 };
 
-//Lambda Statement assigns an anonomous function to the delegate
-OrderProcessor.ProcessCompleted OnCompleted = (order) =>
+//Updated to use the Action<Order> delegate instead of assigning the delegate long form
+Action<Order> OnCompleted = (order) =>
 {
     Console.WriteLine($"Processed {order.OrderNumber}");
 };
 
 processor.Process(order, OnCompleted);
+
 
 bool SendMessageToWarehouse(Order order)//The parameters mus be defined in the method signature if needed, not in the assignement
 {
