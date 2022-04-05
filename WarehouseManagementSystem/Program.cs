@@ -24,6 +24,22 @@ Action<Order> OnCompleted = (order) =>
     Console.WriteLine($"Processed {order.OrderNumber}");
 };
 
+processor.OrderCreated += (sender, args) =>
+{
+    Thread.Sleep(1000);
+    Console.WriteLine("1");
+};
+processor.OrderCreated += (sender, args) =>
+{
+    Thread.Sleep(1000);
+    Console.WriteLine("2");
+};
+processor.OrderCreated += (sender, args) =>
+{
+    Thread.Sleep(1000);
+    Console.WriteLine("3");
+};
+
 processor.Process(order, OnCompleted);
 
 

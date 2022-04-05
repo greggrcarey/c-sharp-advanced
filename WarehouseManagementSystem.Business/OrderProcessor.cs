@@ -4,14 +4,15 @@ namespace WarehouseManagementSystem.Business
 {
     public class OrderProcessor
     {
-        //delegate declaration with property on the class
-        //public delegate bool OrderInitialized(Order order);
-        //public OrderInitialized OnOrderInitialized { get; set; }
-
-        //public delegate void ProcessCompleted(Order order);
-        //Refactored OnOrderInitialized with Func
+        
         public Func<Order,bool> OnOrderInitialized { get; set; }
 
+        public event EventHandler OrderCreated;
+
+        protected virtual void OnOrderCreated()
+        {
+            OrderCreated?.Invoke(this, EventArgs.Empty);
+        }
 
         private void Initialize(Order order)
         {
@@ -31,6 +32,7 @@ namespace WarehouseManagementSystem.Business
 
             Initialize(order);
 
+            OnOrderCreated();
 
             onCompleted?.Invoke(order);
         }
