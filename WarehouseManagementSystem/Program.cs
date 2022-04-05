@@ -29,18 +29,17 @@ processor.OrderCreated += (sender, args) =>
     Thread.Sleep(1000);
     Console.WriteLine("1");
 };
-processor.OrderCreated += (sender, args) =>
-{
-    Thread.Sleep(1000);
-    Console.WriteLine("2");
-};
-processor.OrderCreated += (sender, args) =>
-{
-    Thread.Sleep(1000);
-    Console.WriteLine("3");
-};
 
-processor.Process(order, OnCompleted);
+
+processor.OrderCreated += Log;
+
+processor.Process(order);
+
+void Log(object sender, OrderCreatedEventArgs args)
+{
+    Console.WriteLine("Order Created");
+}
+
 
 
 bool SendMessageToWarehouse(Order order)//The parameters mus be defined in the method signature if needed, not in the assignement
