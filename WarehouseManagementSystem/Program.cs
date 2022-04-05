@@ -12,28 +12,19 @@ var order = new Order
     }
 };
 
+//This changed the delegate from passing a function (SendMessageToWarehouse) to sending the property of the order instance
 var processor = new OrderProcessor
 {
-    OnOrderInitialized = SendMessageToWarehouse
-
+    OnOrderInitialized = (order) => order.IsReadyForShipment
 };
 
-//Multi cast delegate example. Functions are executed in the sequence they are appended.
-//Anyone can add and remove methods from publicly exposed property 
-OrderProcessor.ProcessCompleted chain = One;
-chain += Two;
-chain += Three;
+//Lambda Statement assigns an anonomous function to the delegate
+OrderProcessor.ProcessCompleted OnCompleted = (order) =>
+{
+    Console.WriteLine($"Processed {order.OrderNumber}");
+};
 
-processor.Process(order, chain);
-
-chain -= Two;
-
-processor.Process(order, chain);
-
-
-void One(Order order) => Console.WriteLine("One");
-void Two(Order order) => Console.WriteLine("Two");
-void Three(Order order) => Console.WriteLine("Three");
+processor.Process(order, OnCompleted);
 
 bool SendMessageToWarehouse(Order order)//The parameters mus be defined in the method signature if needed, not in the assignement
 {
