@@ -12,13 +12,47 @@ var order = new Order
     }
 };
 
-//This changed the delegate from passing a function (SendMessageToWarehouse) to sending the property of the order instance
+var order2 = new Order
+{
+    LineItems = new[]
+    {
+        new Item {Name="Xbox", InStock = true, Price = 50},
+        new Item {Name="Xbox 360", InStock = true, Price = 60},
+        new Item {Name="PS1", InStock = false, Price = 50},
+        new Item {Name="PS1", Price = 50}
+    }
+};
+
+var order3 = new Order
+{
+    LineItems = new[]
+    {
+        new Item {Name = "PS1", Price = 50},
+        new Item {Name = "PS2", Price = 60},
+        new Item {Name = "PS4", Price = 70},
+        new Item {Name = "PS5", Price = 80}
+    }
+};
+
+var compare = order.Equals(order2);
+var compare2 = order == order2;
+var hashcode1 = order.GetHashCode();
+var hashcode2 = order2.GetHashCode();
+var equals_as_object = order.Equals(order2 as object);
+
+var compare3 = order.Equals(order3);
+var compare4 = order == order3;
+var hashcode4 = order.GetHashCode();
+var hashcode5 = order3.GetHashCode();
+var equals_as_object2 = order.Equals(order3 as object);
+
+
 var processor = new OrderProcessor
 {
     OnOrderInitialized = (order) => order.IsReadyForShipment
 };
 
-//Updated to use the Action<Order> delegate instead of assigning the delegate long form
+
 Action<Order> OnCompleted = (order) =>
 {
     Console.WriteLine($"Processed {order.OrderNumber}");
