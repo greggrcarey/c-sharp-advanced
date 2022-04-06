@@ -42,6 +42,12 @@
         {
             return !(left == right);
         }
+        public string GenerateReport(string email)
+        {
+            //This implementation will override our extension method with the same signature 
+            //since the compiler will prefer methods in the class over extension methods with the same signature.
+            throw new NotImplementedException();
+        }
     }
 
     public class ProcessedOrder : Order { }

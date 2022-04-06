@@ -1,5 +1,6 @@
 ﻿using WarehouseManagementSystem.Business;
 using WarehouseManagementSystem.Domain;
+using WarehouseManagementSystem.Domain.Extensions;
 
 var order = new Order
 {
@@ -51,6 +52,11 @@ var processor = new OrderProcessor
 {
     OnOrderInitialized = (order) => order.IsReadyForShipment
 };
+
+var expensivePlaystations = order.LineItems.Find(item => item.Price >= 60);
+
+Console.WriteLine(order.GenerateReport());
+Console.WriteLine(order.GenerateReport(recipient: "Gregg"));//By naming the parameter, we can call the extension specifically
 
 
 Action<Order> OnCompleted = (order) =>
