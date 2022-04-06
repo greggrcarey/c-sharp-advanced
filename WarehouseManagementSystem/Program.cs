@@ -13,29 +13,24 @@ var order = new Order
         new Item {Name = "PS5", Price = 80}
     }
 };
-//Anonymous Types 
-//Purpose is to encapsulate a set of read only properties for convinence without creating a class
 
-var instance = new { Total = 100, AmountOfItems = 10 };
-var instance2 = new { Total = 100, AmountOfItems = 10 };
+//tuple is defiend with () 
+//tuple is value type
+//tuple values are stored in fields
+//tuple is not immutable
+var group = (order.OrderNumber,
+    order.LineItems,
+    Sum: order.LineItems.Sum(item => item.Price));
 
-Console.WriteLine(instance.Equals(instance2)); //By Properties - true
-Console.WriteLine(instance == instance2);//By Refecence - False
+//group.Item3//compiler assigned property from the.Sum above. Later updated to name
 
-
-var subset = new {
-    order.OrderNumber, 
-    order.Total,
-    AveragePrice = order.LineItems.Average(item => item.Price) //Named parameter
+//anonymous type is a reference type
+//values are stored in properties with backing fields 
+//read-only
+var groupAsAnonymousType = new
+{
+    order.OrderNumber,
+    order.LineItems,
+    Sum = order.LineItems.Sum(item => item.Price)
 };
-Console.WriteLine(subset.OrderNumber);
-Console.WriteLine(subset.AveragePrice);//Names can be explicit or infered
 
-//You cannot add a method to an anonymous type. You can invoke a delegate, but don't 
-
-var processor = new OrderProcessor();
-
-IEnumerable<Order> orders = JsonSerializer.Deserialize<Order[]>(File.ReadAllText("orders.json"));
-
-if(orders.Any())
-    processor.Process(orders);
