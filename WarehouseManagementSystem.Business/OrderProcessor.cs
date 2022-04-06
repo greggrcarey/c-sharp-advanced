@@ -47,5 +47,31 @@ namespace WarehouseManagementSystem.Business
 
             OnOrderProcessCompleted(new() { Order = order });
         }
+
+        public void Process(IEnumerable<Order> orders)
+        {
+            var summaries = orders.Select(order =>
+            {
+                return new
+                {
+                    Order = order.OrderNumber,
+                    Items = order.LineItems.Count(),
+                    Total = order.LineItems.Sum(item => item.Price)
+                };
+            });
+
+            //Still have access to the anonomyous type since we are still in the method
+            var orderedSummaries = summaries.OrderBy(summary => summary.Total);
+
+            var summary = orderedSummaries.First();
+
+            //with keyword allows changing the anonomyous type and adding new properties
+            //reference types only have their reference coppied
+            var summaryWithTax = summary with
+            {
+                Total = summary.Total * 1.25m
+            };
+
+        }
     }
 }
