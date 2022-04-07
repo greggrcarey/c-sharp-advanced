@@ -76,3 +76,11 @@ var processor = new OrderProcessor();
 
 // Tuples are powerful and can be used in almost all cases that named classes can
 // When data-binding, stick with anonomyous types or named classes
+
+var dictionary = new Dictionary<string, Order>();
+
+foreach (var (orderKey, theOrder) in dictionary)
+{
+    //Deconstruct the the values in the iterator 
+    //Iterate here and do work
+}

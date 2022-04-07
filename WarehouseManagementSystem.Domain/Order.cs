@@ -48,6 +48,21 @@
             //since the compiler will prefer methods in the class over extension methods with the same signature.
             throw new NotImplementedException();
         }
+
+        public void Deconstruct(out decimal total, out bool ready)
+        {
+            total = Total;
+            //ready = IsReadyForShipment && ShippingProvider is not null;// deconstructed parameters can be computed
+            ready = IsReadyForShipment;
+        }
+        //Deconstructors can be overloaded.
+        //Returned parameters can be ignored with discard, but the matching method is called regardless
+        public void Deconstruct(out decimal total, out bool ready, out IEnumerable<Item> items)
+        {
+            total = Total;
+            ready= IsReadyForShipment;
+            items = LineItems;
+        }
     }
 
     public class ProcessedOrder : Order { }
