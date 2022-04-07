@@ -30,5 +30,16 @@ namespace WarehouseManagementSystem.Domain.Extensions
                 $"{Environment.NewLine}" +
                 $"Send to: {recipient}";
         }
+
+        public static string GenerateReport(this (Guid, int, decimal, IEnumerable<Item> ) order)
+        {
+            return $"ORDER REPORT ({order.Item1})" +
+                $"{Environment.NewLine}" +
+                $"Items: {order.Item2}" +
+                $"{Environment.NewLine}" +
+                $"Total: {order.Item3}" +
+                $"{Environment.NewLine}";
+                
+        }
     }
 }

@@ -48,16 +48,18 @@ namespace WarehouseManagementSystem.Business
             OnOrderProcessCompleted(new() { Order = order });
         }
 
-        public void Process(IEnumerable<Order> orders)
+        public (Guid orderNumber, int itemCount, decimal total, IEnumerable<Item> lineItems) Process(IEnumerable<Order> orders)
         {
+            //converted to tuple 
             var summaries = orders.Select(order =>
             {
-                return new
-                {
-                    Order = order.OrderNumber,
-                    Items = order.LineItems.Count(),
-                    Total = order.LineItems.Sum(item => item.Price)
-                };
+                return 
+                (
+                    Order : order.OrderNumber,
+                    Items : order.LineItems.Count(),
+                    Total : order.LineItems.Sum(item => item.Price),
+                    LineItems: order.LineItems
+                );
             });
 
             //Still have access to the anonomyous type since we are still in the method
@@ -67,10 +69,16 @@ namespace WarehouseManagementSystem.Business
 
             //with keyword allows changing the anonomyous type and adding new properties
             //reference types only have their reference coppied
+            //This works with tuples also
+
+            //Non desctructive mutation is prefered instead of modifying the fields
+            //in multi threaded environemnts 
             var summaryWithTax = summary with
             {
                 Total = summary.Total * 1.25m
             };
+
+            return summaryWithTax;
 
         }
     }

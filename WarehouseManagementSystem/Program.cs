@@ -34,3 +34,45 @@ var groupAsAnonymousType = new
     Sum = order.LineItems.Sum(item => item.Price)
 };
 
+//assignment with concrete types. Proterties can be accessed with compiler assigned names
+(Guid, IEnumerable<Item>, decimal) group1 = (order.OrderNumber,
+    order.LineItems,
+    order.LineItems.Sum(item => item.Price));
+
+//assignment with concrete named types. Properties can be accessed with names
+(Guid orderNumber, IEnumerable<Item> items, decimal sum) group2 = (order.OrderNumber,
+    order.LineItems,
+    order.LineItems.Sum(item => item.Price));
+
+//Deconstructed tuple with compiler infered types
+(var orderNumber, var items, var sum) = (order.OrderNumber,
+    order.LineItems,
+    order.LineItems.Sum(item => item.Price));
+
+//Deconstructed tuple with compiler infered types
+var (orderNumber1 ,items1, sum1) = (order.OrderNumber,
+    order.LineItems,
+    order.LineItems.Sum(item => item.Price));
+
+//Automatic assignment to local defined variables through deconstruction. Mind blown
+//If the vaiable is missing, just add the var keyword to the deconstruction for access
+//Order Matters! 
+Guid orderNumber2;
+decimal sum2;
+
+ (orderNumber2,var items2, sum2) = (order.OrderNumber,
+    order.LineItems,
+    order.LineItems.Sum(item => item.Price));
+
+//discard _ any unwanted variables
+//discards can reduce memory allocations
+(var orderNumber3, _,var sum3) = (order.OrderNumber,
+   order.LineItems,
+   order.LineItems.Sum(item => item.Price));
+
+var ordersJson = JsonSerializer.Deserialize<Order[]>(File.ReadAllText("orders.json"));
+
+var processor = new OrderProcessor();
+
+// Tuples are powerful and can be used in almost all cases that named classes can
+// When data-binding, stick with anonomyous types or named classes
