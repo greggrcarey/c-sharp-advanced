@@ -60,9 +60,28 @@
         public void Deconstruct(out decimal total, out bool ready, out IEnumerable<Item> items)
         {
             total = Total;
-            ready= IsReadyForShipment;
+            ready = IsReadyForShipment;
             items = LineItems;
         }
+        //switch expression in an expression body member. 
+        private decimal CalculateFreightCost(Order order)
+        => order.ShippingProvider switch
+        {
+            SwedishPostalServiceShippingProvider { DeliverNextDay: true } => 100m,
+            SwedishPostalServiceShippingProvider => 0m,
+            _ => 50m
+        };
+        //switch expression that captures result of pattern and operates on it.
+        //var pattern is used because discard cannot access the default result
+        private decimal CalculateFreightCost_TypePatternDeclarationPatternAndVarPattern(Order order)
+        => order.ShippingProvider switch
+        {
+            SwedishPostalServiceShippingProvider { DeliverNextDay: true } provider => provider.FreightCost + 50m,
+            SwedishPostalServiceShippingProvider provider => provider.FreightCost - 50m,
+            var provider => provider?.FreightCost ?? 50m
+        };
+
+
     }
 
     public class ProcessedOrder : Order { }
