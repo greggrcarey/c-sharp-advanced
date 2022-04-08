@@ -1,47 +1,24 @@
-﻿namespace WarehouseManagementSystem.Domain
+﻿using System.Text;
+using System.Text.Json.Serialization;
+
+namespace WarehouseManagementSystem.Domain
 {
-    public class Order : IEquatable<Order?>
+    public record Order(
+        [property: JsonPropertyName("total")]
+         decimal Total,
+        [property: JsonIgnore]
+         ShippingProvider ShippingProvider,
+         IEnumerable<Item> LineItems,
+         bool IsReadyForShipment = true
+    )
     {
-        public Guid OrderNumber { get; init; }
-        public ShippingProvider ShippingProvider { get; init; }
-        public int Total { get; }
-        public bool IsReadyForShipment { get; set; } = true;
-        public IEnumerable<Item> LineItems { get; set; }
-
-        public Order()
-        {
-            OrderNumber = Guid.NewGuid();
-        }
-
-        public override bool Equals(object? obj)
-        {
-            return Equals(obj as Order);
-        }
-
-        public bool Equals(Order? other)
-        {
-            return other != null &&
-                   OrderNumber.Equals(other.OrderNumber) &&
-                   EqualityComparer<ShippingProvider>.Default.Equals(ShippingProvider, other.ShippingProvider) &&
-                   Total == other.Total &&
-                   IsReadyForShipment == other.IsReadyForShipment &&
-                   EqualityComparer<IEnumerable<Item>>.Default.Equals(LineItems, other.LineItems);
-        }
+        public Guid OrderNumber { get; init; } = Guid.NewGuid();
 
         public override int GetHashCode()
         {
             return HashCode.Combine(OrderNumber, ShippingProvider, Total, IsReadyForShipment, LineItems);
         }
-
-        public static bool operator ==(Order? left, Order? right)
-        {
-            return EqualityComparer<Order>.Default.Equals(left, right);
-        }
-
-        public static bool operator !=(Order? left, Order? right)
-        {
-            return !(left == right);
-        }
+       
         public string GenerateReport(string email)
         {
             //This implementation will override our extension method with the same signature 
@@ -80,11 +57,41 @@
             SwedishPostalServiceShippingProvider provider => provider.FreightCost - 50m,
             var provider => provider?.FreightCost ?? 50m
         };
-
+        //overwrite the ToString/ PrintMembers of a record
+        protected virtual bool PrintMemebers(StringBuilder builder)
+        {
+            builder.Append("A custom implementation");
+            return true;
+        }
 
     }
 
-    public class ProcessedOrder : Order { }
+    public record ProcessedOrder(
+          decimal Total,
+         ShippingProvider ShippingProvider,
+         IEnumerable<Item> LineItems,
+         bool IsReadyForShipment = true) : Order(Total, ShippingProvider, LineItems, IsReadyForShipment) 
+    {
+       
+    }
+
+    public record ShippedOrder(
+         decimal Total,
+         ShippingProvider ShippingProvider,
+         IEnumerable<Item> LineItems
+        ): Order(Total, ShippingProvider, LineItems, false) 
+    {
+        public DateTime ShippedDate { get; set; }
+    }
+
+    public record CanceledOrder(
+           decimal Total,
+           ShippingProvider ShippingProvider,
+           IEnumerable<Item> LineItems
+          ) : Order(Total, ShippingProvider, LineItems, false)
+    {
+        public DateTime CanceledDate { get; set; }
+    }
 
     public class Item
     {
