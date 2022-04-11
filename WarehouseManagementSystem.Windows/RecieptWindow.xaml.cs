@@ -38,7 +38,7 @@ namespace WarehouseManagementSystem.Windows
             base.OnClosing(e);
         }
 
-        private void Processor_OrderCreated(object sender, OrderCreatedEventArgs args)
+        private void Processor_OrderCreated(object? sender, OrderCreatedEventArgs args)
         {
             MessageBox.Show($"Processed {args.Order.OrderNumber}");
         }

@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text;
 using System.Text.Json.Serialization;
 
 namespace WarehouseManagementSystem.Domain
@@ -6,12 +7,17 @@ namespace WarehouseManagementSystem.Domain
     public record Order(
         [property: JsonPropertyName("total")]
          decimal Total,
-        [property: JsonIgnore]
-         ShippingProvider ShippingProvider,
-         IEnumerable<Item> LineItems,
+        
+        [AllowNull]
+         ShippingProvider ShippingProvider = default,
+         IEnumerable<Item> LineItems = default,
          bool IsReadyForShipment = true
     )
     {
+        [JsonIgnore]
+        public ShippingProvider ShippingProvider { get; init; } = ShippingProvider ?? new();
+        //ShippingProvider written this way allows for a null value to be passed to the constructor, but if so, 
+        //the ShippingProvier property will be set to a new instance of the Property 
         public Guid OrderNumber { get; init; } = Guid.NewGuid();
 
         public override int GetHashCode()
@@ -98,5 +104,10 @@ namespace WarehouseManagementSystem.Domain
         public string Name { get; set; }
         public decimal Price { get; set; }
         public bool InStock { get; set; }
+
+        public Item(string Name)
+        {
+            this.Name = Name;
+        }
     }
 }

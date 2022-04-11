@@ -37,12 +37,13 @@ namespace WarehouseManagementSystem.Windows
 
         private void ProcessOrder_Click(object sender, RoutedEventArgs e)
         {
-            var order = Orders.SelectedItem as Order ?? new();
+            var order = Orders.SelectedItem as Order;
 
             var reciept = new RecieptWindow(Processor);
             reciept.Owner = this;
             reciept.Show();
 
+            if(order is not null)
             Processor.Process(order);
 
         }

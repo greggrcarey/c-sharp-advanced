@@ -10,10 +10,10 @@ namespace WarehouseManagementSystem.Domain
     {
         public string Fullname => $"{Firstname} {Lastname}";
         //public Address Address { get; set; }//getter and setter makes this property NOT imutable on the Customer record
-        public Address Address { get; init; }//init in the setter makes the property immutable
+        public Address? Address { get; init; }//init in the setter makes the property immutable
     }
 
-    public record Address(string street, string postalCode);
+    public record Address(string Street, string PostalCode);
 
     public record PriorityCustomer(string Firstname, string Lastname)
         : Customer(Firstname, Lastname);

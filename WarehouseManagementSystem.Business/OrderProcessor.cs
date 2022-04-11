@@ -5,10 +5,10 @@ namespace WarehouseManagementSystem.Business
     public class OrderProcessor
     {
         
-        public Func<Order,bool> OnOrderInitialized { get; set; }
+        public Func<Order,bool>? OnOrderInitialized { get; set; }
 
-        public event EventHandler<OrderCreatedEventArgs> OrderCreated;
-        public event EventHandler<OrderProcessCompletedEventArgs> OrderProcessCompleted;
+        public event EventHandler<OrderCreatedEventArgs>? OrderCreated;
+        public event EventHandler<OrderProcessCompletedEventArgs>? OrderProcessCompleted;
 
         protected virtual void OnOrderCreated(OrderCreatedEventArgs args)
         {
@@ -38,9 +38,9 @@ namespace WarehouseManagementSystem.Business
 
             Initialize(order);
 
-            OnOrderCreated(new()
+            //Updated ctor with order instance
+            OnOrderCreated(new(order)
             {
-                Order = order,
                 OldTotal = 100,
                 NewTotal = 80
             });
